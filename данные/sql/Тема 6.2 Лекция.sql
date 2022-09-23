@@ -34,9 +34,9 @@ WHERE "condition";
 Общая структура запроса выглядит следующим образом:
 WITH 'имя_производной_таблицы' ('список_столбцов') AS ('подзапрос') -- необязательно
 SELECT [DISTINCT] ('столбцы или * для выбора всех столбцов') AS 'псевдоним' -- обязательно
-FROM ('таблица/ таблица1 (LEFT, RIGHT) JOIN таблица2 ON условие_соединения') -- обязательно
+FROM ('таблица A/ таблица1 (LEFT, RIGHT) JOIN таблица2 ON условие_соединения') -- обязательно
 WHERE ('условие/фильтрация, например, city = 'Moscow'') /* необязательно, операции сравнения: =  <  >  <=  >=  <> !=
-условие поиска: AND OR NOT*/
+условие поиска: AND OR NOT */
 GROUP BY ('столбец, по которому хотим сгруппировать данные') -- необязательно
 HAVING ('условие/фильтрация на уровне сгруппированных данных') -- необязательно
 ORDER BY ('столбец, по которому хотим отсортировать вывод') -- необязательно
@@ -101,7 +101,7 @@ where City NOT IN ('Newton', 'Salem','Woburn');
 или OR (выполняется хотя бы одно условие) и нескольким значениям;
 
 select * from Customer
-where STATE = 'MA' AND City not in ('Newton', 'Salem','Woburn') AND CUST_ID > 5;
+where (STATE = 'MA') AND (City not in ('Newton', 'Salem','Woburn')) AND (CUST_ID > 5);
 
 select * from Customer
 where City in ('Newton', 'Salem') OR CUST_ID > 10;
@@ -149,7 +149,7 @@ GROUP BY STATE, CITY;
 количество счетов по банковскому продукту и сумма баланса на этих счетах;
 
 
-select PRODUCT_CD, COUNT(ACCOUNT_ID), SUM(AVAIL_BALANCE) from account
+select PRODUCT_CD as 'Продукт', COUNT(ACCOUNT_ID) as 'Количество', SUM(AVAIL_BALANCE) from account
 GROUP BY PRODUCT_CD;
 
 Группировка с фильтрацией исходной таблицы. 
@@ -163,7 +163,9 @@ GROUP BY City;
 Переименование столбца с агрегацией с помощью оператора AS. 
 По умолчанию название столбца с агрегацией равно примененной агрегатной функции, что далее может быть не очень удобно для восприятия;
 
-select City, count(CUST_ID) AS Number_of_clients from Customer
+select City, count(CUST_ID) 
+AS 'Количество' 
+from Customer
 group by City;
 
 
@@ -197,6 +199,10 @@ HAVING number_of_clients >= 2;
  рассчитывается количество клиентов по городам и остаются только те города, 
  где количество клиентов не менее 5;
 
+select City, count(CUST_ID) as number_of_clients from Customer
+WHERE CUST_TYPE_CD not in ('B')
+group by City
+HAVING city like 'S%';
 
 select City, count(CUST_ID) as number_of_clients from Customer
 WHERE CUST_TYPE_CD not in ('B')
@@ -209,17 +215,16 @@ HAVING number_of_clients >= 2;
 Вам нужно различать между Where и Having в одной команде.
 Where это команда, которая фильтрует данные перед группировкой (Group)
 Having это команда, которая фильтрует данные после группировки (Group)
-Если вы хотите иметь общую информацию филиала банка (Таблица BRANCH). Вы можете использовать where, чтобы отфильтровать данные перед группировкой (group).
+Если вы хотите иметь общую информацию филиала банка (Таблица BRANCH). 
+Вы можете использовать where, чтобы отфильтровать данные перед группировкой (group);
 
 Select Acc.Product_Cd
      ,Count(Acc.Product_Cd) As Count_Acc
      ,Sum(Acc.Avail_Balance) As Sum_Avail_Balance
      ,Avg(Acc.Avail_Balance) As Avg_Avail_Balance
 From   Account Acc
--- Using WHERE to filter data before group
 Where  Acc.Open_Branch_Id = 1
 Group  By Acc.Product_Cd
--- Using HAVING to filter data after group
 Having Count(Acc.Product_Cd) > 1;
 
 
