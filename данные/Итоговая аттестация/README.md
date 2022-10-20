@@ -101,7 +101,7 @@ for i in df.columns.to_list():
   my_report = sv.analyze(df) 
   my_report.show_html()
 ```
-### 🔮 Проверка гипотез о данных
+## 🔮 Проверка гипотез о данных
 ```
 s, pvalue = scipy.stats.ttest_ind(df1, df2, equal_var=True, alternative='two-sided')
 print('p-значение равно {:5.3f}'.format(pvalue))
