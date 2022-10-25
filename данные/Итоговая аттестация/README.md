@@ -126,18 +126,18 @@ sim_options = {'name': 'cosine',
 sim_user = KNNBasic(sim_options=sim_options, verbose=False, random_state=33)
 sim_user.fit(trainset)
 
-def get_recommendations(data, user_id, algo):
+def get_recommendations(user_id):
     recommendations = []
-    user_interactions_matrix = data.pivot(index='user', columns='item', values='rating')
+    user_interactions_matrix = df.pivot(index='user', columns='item', values='rating')
     non_interacted_items = user_interactions_matrix.loc[user_id][user_interactions_matrix.loc[user_id].isnull()].index.tolist()
     for item_id in non_interacted_items:
-        est = algo.predict(user_id, item_id).est
+        est = sim_user.predict(user_id, item_id).est
         recommendations.append((item_id, est))
     recommendations.sort(key=lambda x: x[1], reverse=True)
     return recommendations[:10] 
     
     
-get_recommendations(df, 4, sim_user)    
+get_recommendations(Номер пользователя)    
 
 ```
 
