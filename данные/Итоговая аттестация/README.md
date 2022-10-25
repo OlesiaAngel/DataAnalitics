@@ -64,6 +64,7 @@ df.columns = ['user','item','rating']
 ### Вариант 1. kNN sklearn.neighbors
 ```
 from sklearn.neighbors import NearestNeighbors  
+from collections import defaultdict
 
 df_matrix = data.pivot(index= 'user',columns='item',values='rating').fillna(0)
 w1_pivot_matrix = csr_matrix(df_matrix)
