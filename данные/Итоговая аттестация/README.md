@@ -56,6 +56,91 @@ print(featureScores.nlargest(10, 'Score'))
 
 ## 🛒 Рекомендательные системы
 
+**Преименовать признаки**
+```
+df.columns = ['user','item','rating']
+```
+
+### Вариант 1. kNN sklearn.neighbors
+```
+from sklearn.neighbors import NearestNeighbors  
+
+df_matrix = data.pivot(index= 'user',columns='item',values='rating').fillna(0)
+w1_pivot_matrix = csr_matrix(df_matrix)
+
+
+knn = NearestNeighbors(n_neighbors=10, algorithm= 'brute', metric= 'cosine')
+model_knn = knn.fit(w1_pivot_matrix)
+
+def most_similar_users_to(user_id):
+    most_similar_users_to = []
+    distance, indice = model_knn.kneighbors(df_matrix.iloc[user_id,:].values.reshape(1,-1), n_neighbors=10)
+    print('Рекомендации для ## {0} ##:'.format(df_matrix.index[user_id]))
+    for i in range(1, len(distance.flatten())):
+        user_id1 = df_matrix.index[indice.flatten()[i]]
+        most_similar_users_to.append((user_id1, distance.flatten()[i]))
+
+    most_similar_users_to.sort(key=lambda x: x[1], reverse=True)
+
+    return most_similar_users_to[:10] 
+    
+    
+def user_based_suggestions(user_id):
+    # суммировать все коэффициенты подобия
+    suggestions = defaultdict(float)
+    non_interacted_items = df_matrix.iloc[user_id][df_matrix.iloc[user_id]==0].index.tolist()
+    for other_user_id, similarity in most_similar_users_to(user_id):
+        items_user_id = df_matrix.loc[other_user_id][df_matrix.loc[other_user_id]>0]
+        for interest in items_user_id.index.tolist():
+            if interest in non_interacted_items:
+                suggestions[interest] += similarity
+
+    # преобразовать их в сортированный список
+    suggestions = sorted(suggestions.items(),
+                         key=lambda x: x[1],
+                         reverse=True)
+    return suggestions[:10]    
+    
+
+print("Рекомендации для пользователя")
+print(user_based_suggestions(Номер пользователя))
+```
+
+### Вариант 2. kNN surprise.prediction_algorithms.knns
+```
+# установка в терминале: conda install -c conda-forge scikit-surprise
+from surprise import Dataset, Reader
+from surprise.prediction_algorithms.matrix_factorization import SVD
+from surprise import accuracy
+from surprise.prediction_algorithms.knns import KNNBasic
+
+reader = Reader(line_format='user item rating', sep=',', rating_scale=(0,5), skip_lines=1)
+data = Dataset.load_from_df(df, reader=reader)
+trainset = data.build_full_trainset()
+
+
+# Параметры сходства
+sim_options = {'name': 'cosine',
+               'user_based': True}
+sim_user = KNNBasic(sim_options=sim_options, verbose=False, random_state=33)
+sim_user.fit(trainset)
+
+def get_recommendations(data, user_id, algo):
+    recommendations = []
+    user_interactions_matrix = data.pivot(index='user', columns='item', values='rating')
+    non_interacted_items = user_interactions_matrix.loc[user_id][user_interactions_matrix.loc[user_id].isnull()].index.tolist()
+    for item_id in non_interacted_items:
+        est = algo.predict(user_id, item_id).est
+        recommendations.append((item_id, est))
+    recommendations.sort(key=lambda x: x[1], reverse=True)
+    return recommendations[:10] 
+    
+    
+get_recommendations(df, 4, sim_user)    
+
+```
+
+
 ## 📈 EDA анализ 
 ### 🗑 Очистка данных
 
