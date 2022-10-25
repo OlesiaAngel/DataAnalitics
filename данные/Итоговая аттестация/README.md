@@ -155,6 +155,15 @@ data['Количество'] = data['Количество'].astype(int)
 data['Дата2'] = data['Дата'].dt.date
 ```
 
+**Выделить список категориальных признаков**
+
+```
+categorical_columns = [c for c in df.columns if df[c].dtype.name == 'object']
+numerical_columns   = [c for c in df.columns if df[c].dtype.name != 'object']
+df[categorical_columns].describe()
+df.describe(include=[object])
+```
+
 **Проверить на пустые значения**
 ```
 df.isnull().sum()
