@@ -76,7 +76,6 @@ model_knn = knn.fit(w1_pivot_matrix)
 def most_similar_users_to(user_id):
     most_similar_users_to = []
     distance, indice = model_knn.kneighbors(df_matrix.iloc[user_id,:].values.reshape(1,-1), n_neighbors=10)
-    print('Рекомендации для ## {0} ##:'.format(df_matrix.index[user_id]))
     for i in range(1, len(distance.flatten())):
         user_id1 = df_matrix.index[indice.flatten()[i]]
         most_similar_users_to.append((user_id1, distance.flatten()[i]))
@@ -108,6 +107,7 @@ print(user_based_suggestions(Номер пользователя))
 ```
 
 ### Вариант 2. kNN surprise.prediction_algorithms.knns
+
 ```
 # установка в терминале: conda install -c conda-forge scikit-surprise
 from surprise import Dataset, Reader
@@ -118,7 +118,6 @@ from surprise.prediction_algorithms.knns import KNNBasic
 reader = Reader(line_format='user item rating', sep=',', rating_scale=(0,5), skip_lines=1)
 data = Dataset.load_from_df(df, reader=reader)
 trainset = data.build_full_trainset()
-
 
 # Параметры сходства
 sim_options = {'name': 'cosine',
