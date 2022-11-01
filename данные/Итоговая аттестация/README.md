@@ -94,7 +94,7 @@ def user_based_suggestions(user_id):
         items_user_id = df_matrix.loc[other_user_id][df_matrix.loc[other_user_id]>0]
         for interest in items_user_id.index.tolist():
             if interest in non_interacted_items:
-                 # для вывода списка товаров/фильмов,  df_items - датафрейм со названиями товаров/фильмов
+                 # для вывода списка товаров/фильмов,  df_items - датафрейм с названиями товаров/фильмов
                 item_name = df_items[df_items['article_id']==interest]['product_type_name'].values[0]
                 suggestions[item_name] += similarity
     # преобразовать их в сортированный список
@@ -133,7 +133,7 @@ def get_recommendations(user_id):
     non_interacted_items = user_interactions_matrix.loc[user_id][user_interactions_matrix.loc[user_id].isnull()].index.tolist()
     for item_id in non_interacted_items:
         est = sim_user.predict(user_id, item_id).est
-        # для вывода списка товаров/фильмов,  df_items - датафрейм со названиями товаров/фильмов
+        # для вывода списка товаров/фильмов,  df_items - датафрейм с названиями товаров/фильмов
         item_name = df_items[df_items['article_id']==interest]['product_type_name'].values[0]
         recommendations.append((item_name, est))
     recommendations.sort(key=lambda x: x[1], reverse=True)
