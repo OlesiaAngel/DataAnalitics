@@ -113,7 +113,7 @@ df.describe()
 
 
 ### 📊 Визуализация
-**sweetviz**
+**➡️ sweetviz**
 ```
   !pip install sweetviz 
 
