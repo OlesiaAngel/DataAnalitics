@@ -136,6 +136,12 @@ sns.histplot(x = 'Признак1', hue = 'Признак2', data = df, multiple
 ```
 
 ```
+sns.set()
+ax = sns.countplot(x = "Признак1", data = df)
+ax = ax.set_xticklabels(ax.get_xticklabels(), rotation = 45)
+```
+
+```
 df.plot.bar()
 ```
 
