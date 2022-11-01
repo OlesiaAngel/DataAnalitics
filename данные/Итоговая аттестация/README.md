@@ -140,30 +140,8 @@ df.plot.bar()
 ```
 
 ```
-from plotly.offline import iplot
-import plotly
-import plotly.graph_objs as go
-
-#опишем ряд 1
-trace0 = go.Bar(
-    x=df1,
-    y=df2,
-    name='Имя 1',
-)
-#опишем ряд 2
-trace1 = go.Bar(
-    x=df1,
-    y=df2,
-    name='Имя 2',
-)
-
-#объединим данные о рядах в один список и зададим заголовок
-data = [trace0, trace1]
-layout = {'title': 'Название графика'}
-
-#передадим информацию о заголовке и данных и построим график
-fig = go.Figure(data=data, layout=layout)
-iplot(fig, show_link=False)
+fig = px.bar(df1, x='Признак1', y='Признак2', color='Признак1', text_auto=True)
+fig.show();
 ```
 
 **➡️ Диаграмма рассеяния**
@@ -224,6 +202,13 @@ plt.pie(df, autopct='%.1f', labels=data_names)
 
 ```
 sns.heatmap(df, cmap="Reds", annot = True);
+```
+
+**➡️ Древовидная диаграмма**
+
+```
+fig = px.treemap(df2, path=['Признак1'], values='Признак2', color='Признак1')
+fig.show()
 ```
 
 ### 🚩 Корреляция
