@@ -157,6 +157,10 @@ plt.scatter (x, y, s = нет, c = нет, cmap = нет)
 ```
 
 ```
+sns.scatterplot(x = "Признак1", y = "Признак2", data = df, color = 'hotpink')
+```
+
+```
 sns.pairplot(df, hue = 'Признак1')
 ```
 
