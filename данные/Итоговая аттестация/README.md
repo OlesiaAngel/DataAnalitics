@@ -364,24 +364,6 @@ plt.scatter(df['Признак 1'], df["Признак 2"], c = kmeans.labels_, 
 plt.title('5 кластеров K-Means')
 ```
 
-### ❗❗❗ Важность признаков
-
-```
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import chi2
-
-X = df
-y = df.iloc[:, -1]
-
-bestfeatures = SelectKBest(score_func = chi2, k = 'all')
-fit = bestfeatures.fit(X, y)
-dfscores = pd.DataFrame(fit.scores_)
-dfcolumns = pd.DataFrame(X.columns)
-
-featureScores = pd.concat([dfcolumns, dfscores], axis = 1)
-featureScores.columns = ['Specs', 'Score']  
-print(featureScores.nlargest(10, 'Score'))  
-```
 
 ## 🛒 Рекомендательные системы (коллаборативная фильтрация по схожести пользователей)
 
