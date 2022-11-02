@@ -388,7 +388,7 @@ from sklearn.neighbors import NearestNeighbors
 from collections import defaultdict
 from scipy.sparse import csr_matrix 
 
-df_matrix = data.pivot(index= 'user',columns='item',values='rating').fillna(0)
+df_matrix = df.pivot(index= 'user',columns='item',values='rating').fillna(0)
 w1_pivot_matrix = csr_matrix(df_matrix)
 
 
