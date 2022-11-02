@@ -81,7 +81,9 @@ for i in df.columns.to_list():
 ### ✂️ Операции с датафреймом
 
 ```
-df2 = sqldf("""SELECT Признак1, Признак2, Признак3
+import pandasql as ps
+
+df2 = ps.sqldf("""SELECT Признак1, Признак2, Признак3
             FROM df1 """)
 ```
 
