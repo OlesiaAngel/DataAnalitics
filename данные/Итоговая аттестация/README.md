@@ -455,7 +455,7 @@ def get_recommendations(user_id):
     for item_id in non_interacted_items:
         est = sim_user.predict(user_id, item_id).est
         # для вывода списка товаров/фильмов,  df_items - датафрейм с названиями товаров/фильмов
-        item_name = df_item[df_item['article_id']==interest]['product_name'].values[0]
+        item_name = df_item[df_item['article_id']==item_id]['product_name'].values[0]
         recommendations.append((item_name, est))
     recommendations.sort(key=lambda x: x[1], reverse=True)
     return recommendations[:10] 
